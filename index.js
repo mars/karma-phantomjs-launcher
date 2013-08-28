@@ -12,7 +12,9 @@ var PhantomJSBrowser = function(baseBrowserDecorator, config, args) {
     var optionsCode = Object.keys(options).map(function (key) {
       return 'page.' + key + ' = ' + JSON.stringify(options[key]) + ';';
     });
+    var errorCode = 'page.onError = function(msg, trace) { console.log(msg); trace.forEach(function(item) { console.log("  ", item.file, ":", item.line); }); };\n'
     var captureCode = 'var page = require("webpage").create();\n' +
+        errorCode +
         optionsCode.join('\n') + '\npage.open("' + url + '");\n';
     fs.writeFileSync(captureFile, captureCode);
 
